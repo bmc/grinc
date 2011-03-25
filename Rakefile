@@ -51,18 +51,17 @@ def man_source
   end
 end
 
-# Make man/man?/thing.? from src-man/thing.?/md
-rule %r{#{MAN_OUT_DIR}/man[0-9]/.*\.[0-9]} => [man_source, 'Rakefile'] do |t|
-  mkdir_p File.dirname(t.name)
-  sh "ronn --roff --pipe #{t.source} >#{t.name}"
-end
-
 # Make man/man?/thing.?.html from src-man/thing.?/md
-rule %r{#{MAN_OUT_DIR}/man[0-9]/.*\.[0-9]\.html} => [man_source, 'Rakefile'] do |t|
+rule %r{#{MAN_OUT_DIR}/man[0-9]/[^.]+\.[0-9]\.html} => [man_source, 'Rakefile'] do |t|
   mkdir_p File.dirname(t.name)
   sh "ronn --html --pipe #{t.source} >#{t.name}"
 end
 
+# Make man/man?/thing.? from src-man/thing.?/md
+rule %r{#{MAN_OUT_DIR}/man[0-9]/[^.]+\.[0-9]} => [man_source, 'Rakefile'] do |t|
+  mkdir_p File.dirname(t.name)
+  sh "ronn --roff --pipe #{t.source} >#{t.name}"
+end
 
 # ---------------------------------------------------------------------------
 # Tasks
@@ -110,10 +109,11 @@ task :pubdoc => [:pubman, :pubchangelog]
 
 desc "Publish the man pages. Not really of use to anyone but the author"
 task :pubman => :man do |t|
-  target = Pathname.new(MAN_PUBLISH_DIR).expand_path.to_s
+  target_dir = Pathname.new(MAN_PUBLISH_DIR).expand_path.to_s
   cd MAN_OUT_DIR do
-    mkdir_p target
+    mkdir_p target_dir
     Dir['**/*.html'].each do |m|
+      target = File.join(target_dir, File.basename(m))
       cp m, target
     end
   end
