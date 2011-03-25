@@ -1,0 +1,79 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "GRINC" "1" "March 2011" "" ""
+.
+.SH "NAME"
+\fBgrinc\fR \- Process includes on a text file
+.
+.SH "SYNOPSIS"
+\fBgrinc\fR [\-o output | \-\-output output] [\-n maxnest | \-\-maxnest maxnest] [files]
+.
+.SH "DESCRIPTION"
+\fIgrinc\fR runs an include file preprocessor on one or more files, writing the result to an output file (or standard output)\.
+.
+.P
+If the output file isn\'t specified, output is written to standard output\.
+.
+.P
+The \fIinclude\fR syntax is simple:
+.
+.IP "" 4
+.
+.nf
+
+%include "filespec"
+.
+.fi
+.
+.IP "" 0
+.
+.P
+\fIfilespec\fR can be an absolute pathname, a relative pathname, a simple file name, or a URL\. For example:
+.
+.IP "" 4
+.
+.nf
+
+%include "/absolute/path/to/file"
+%include "\.\./relative/path/to/file"
+%include "local_reference"
+%include "http://localhost/path/to/my\.config"
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Relative and local file references are relative to the including file or URL\. That, if \fIgrinc\fR is processing file "/home/bmc/foo\.txt" and encounters an attempt to include file "bar\.txt", it will assume "bar\.txt" is to be found in "/home/bmc"\.
+.
+.P
+Similarly, if \fIgrinc\fR is processing URL "http://localhost/bmc/foo\.txt" and encounters an attempt to include file "bar\.txt", it will assume "bar\.txt" is to be found at "http://localhost/bmc/bar\.txt"\.
+.
+.P
+Nested includes are permitted; that is, an included file may, itself, include other files\. The maximum recursion level is configurable, via a command line option, and defaults to 100\.
+.
+.P
+Multiple input files are permitted; they are processed in turn, and their expanded outputs are concatenated to the output file\. If no input files are specified, \fIgrinc\fR reads standard input\.
+.
+.SH "OPTIONS"
+.
+.TP
+\fB\-n N\fR, \fB\-\-nesting=N\fR, \fB\-\-nesting N\fR
+The maximum number of nested include files\. Default: 100
+.
+.TP
+\fB\-o file\fR, \fB\-\-output=file\fR, \fB\-\-output file\fR
+Where to write the resulting expanded file\. Default: standard output\.
+.
+.SH "SEE ALSO"
+m4(1)
+.
+.SH "AUTHOR"
+Brian M\. Clapper, \fIbmc@clapper\.org\fR
+.
+.SH "COPYRIGHT"
+Copyright \(co 2011 Brian M\. Clapper
+.
+.SH "LICENSE"
+\fIgrinc\fR is released under a BSD license\.
