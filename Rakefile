@@ -113,7 +113,7 @@ task :pubman => :man do |t|
   target = Pathname.new(MAN_PUBLISH_DIR).expand_path.to_s
   cd MAN_OUT_DIR do
     mkdir_p target
-    Dir['*.html'].each do |m|
+    Dir['**/*.html'].each do |m|
       cp m, target
     end
   end
