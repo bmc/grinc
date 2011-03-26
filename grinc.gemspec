@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
 
   s.name             = 'grinc'
   s.version          = '0.1.1'
-  s.date             = '2011-03-25'
+  s.date             = '2011-03-26'
   s.summary          = 'Command line include file preprocessor'
   s.authors          = ['Brian M. Clapper']
   s.license          = 'BSD'
@@ -21,8 +21,8 @@ ENDDESC
   # = MANIFEST =
   s.files            = Dir.glob('[A-Z]*')
   s.files           += Dir.glob('*.gemspec')
-  s.files           += Dir.glob('lib/**/*')
   s.files           += Dir.glob('bin/**/*')
+  s.files           += Dir.glob('lib/**/*')
   s.files           += Dir.glob('man/**/*.[0-9]')
   s.files           += Dir.glob('src-man/**/*')
 

@@ -7,7 +7,7 @@ require 'pathname'
 
 PACKAGE = 'grinc'
 GEMSPEC = "#{PACKAGE}.gemspec"
-RUBY_FILES = FileList['bin/*']
+RUBY_FILES = FileList['bin/*', 'lib/*']
 MAN_OUT_DIR = 'man'
 GH_PAGES_DIR = File.join('..', 'gh-pages')
 MAN_PUBLISH_DIR = File.join(GH_PAGES_DIR, 'man')
@@ -33,7 +33,7 @@ def gem_name(spec)
 end
 
 GEM = gem_name(GEMSPEC)
-CLEAN << [MAN_OUT_DIR, GEM]
+CLEAN << [MAN_OUT_DIR] + FileList['*.gem']
 
 # ---------------------------------------------------------------------------
 # Rules
@@ -76,7 +76,7 @@ desc "Synonym for 'build'"
 task :all => :build
 
 desc "Build the gem (#{GEM})"
-task :gem => GEM
+task :gem => [GEM, :doc]
 
 file GEM => RUBY_FILES + ['Rakefile', GEMSPEC] do |t|
   require 'rubygems/builder'
@@ -94,9 +94,8 @@ task :man => MAN_PAGES + ['Rakefile']
 
 desc "Install the gem"
 task :install => :gem do |t|
-  require 'rubygems/installer'
   puts("Installing from #{GEM}")
-  Gem::Installer.new(GEM).install
+  sh "gem install #{GEM}"
 end
 
 desc "Publish the gem"
