@@ -3,7 +3,7 @@ grinc(1) -- Process includes on a text file
 
 ## SYNOPSIS
 
-`grinc` [-o output | --output output] [-n maxnest | --maxnest maxnest] [files]
+`grinc` \[-o path | --output path\] \[-n N | --nesting N\] \[-v | --version\] \[files\]
 
 ## DESCRIPTION
 
@@ -48,7 +48,10 @@ are specified, *grinc* reads standard input.
 
 * `-o file`, `--output=file`, `--output file`:
   Where to write the resulting expanded file. Default: standard output.
-  
+
+* `-v`, `--version`:
+  Display the *grinc* version number and exit.
+
 ## SEE ALSO
 
 m4(1)

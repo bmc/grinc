@@ -3,13 +3,13 @@
 Gem::Specification.new do |s|
 
   s.name             = 'grinc'
-  s.version          = '0.1.1'
-  s.date             = '2011-03-26'
+  s.version          = '0.1.2'
+  s.date             = '2011-03-27'
   s.summary          = 'Command line include file preprocessor'
   s.authors          = ['Brian M. Clapper']
   s.license          = 'BSD'
   s.email            = 'bmc@clapper.org'
-  s.homepage         = 'http://software.clapper.org/grinc'
+  s.homepage         = 'http://software.clapper.org/grinc/'
 
   s.description      = <<-ENDDESC
 grinc runs an include file preprocessor on one or more files, writing the

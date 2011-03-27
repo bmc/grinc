@@ -53,6 +53,7 @@ module Grizzled
 
     DEFAULT_MAX_NEST = 100
     PROGRAM_NAME = 'grinc'
+    THIS_GEM_PATH = 'grizzled/grinc'
 
     # -----------------------------------------------------------------------
     # Classes
@@ -62,9 +63,13 @@ module Grizzled
       attr_reader :output, :max_nesting, :input_paths
 
       def initialize(options_hash, argv)
-        @output = options_hash[:output]
-        @max_nesting = options_hash[:max_nesting] || DEFAULT_MAX_NEST
-        @input_paths = argv.length == 0 ? nil : argv
+        @options = options_hash
+        @options[:max_nesting] = options_hash[:max_nesting] || DEFAULT_MAX_NEST
+        @options[:input_paths] = argv.length == 0 ? nil : argv
+      end
+
+      def method_missing(m, *args, &block)
+        @options[m]
       end
 
       def to_s
@@ -81,14 +86,10 @@ module Grizzled
       def run
         begin
           params = parse_params
-          out = params.output.nil? ? $stderr : File.open(params.output, 'w')
-
-          if params.input_paths.nil?
-            process_include($stdin, out, params.max_nesting)
+          if params.show_version
+            show_version_only
           else
-            params.input_paths.each do |f|
-              process_include(File.open(f), out, params.max_nesting)
-            end
+            run_includer params
           end
 
         rescue UsageError
@@ -104,6 +105,30 @@ module Grizzled
 
         else
           return 0
+        end
+      end
+
+      private
+
+      def show_version_only
+        gem_spec = Gem.searcher.find(THIS_GEM_PATH)
+        if not gem_spec
+          raise StandardError.new("Can't find Gem specification for path \"" +
+                                  "#{THIS_GEM_PATH}\".")
+        end
+        puts("#{PROGRAM_NAME}, version #{gem_spec.version}. " +
+             "#{gem_spec.homepage}")
+      end
+
+      def run_includer(params)
+        out = params.output.nil? ? $stderr : File.open(params.output, 'w')
+
+        if params.input_paths.nil?
+          process_include($stdin, out, params.max_nesting)
+        else
+          params.input_paths.each do |f|
+            process_include(File.open(f), out, params.max_nesting)
+          end
         end
       end
 
@@ -126,6 +151,10 @@ module Grizzled
               error = "Non-numeric parameter \"#{n}\" to -n option."
             end
             options_hash[:max_nesting] = n.to_i
+          end
+
+          opts.on('-V', '--version', 'Display version number and exit.') do
+            options_hash[:show_version] = true
           end
         end
 
