@@ -25,7 +25,7 @@ name, or a URL. For example:
     %include "http://localhost/path/to/my.config"
 
 Relative and local file references are relative to the including file or
-URL. That, if *grinc* is processing file "/home/bmc/foo.txt" and encounters
+URL. That is, if *grinc* is processing file "/home/bmc/foo.txt" and encounters
 an attempt to include file "bar.txt", it will assume "bar.txt" is to be
 found in "/home/bmc".
 
